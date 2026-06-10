@@ -199,12 +199,13 @@
         <!-- ==================== STATION 1: SOFT LANDING WELCOME PAGE ==================== -->
         <section id="station-welcome" class="space-y-12 py-8 md:py-16">
             <div class="text-center space-y-8 animate-float">
-                <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+                <div class="relative w-48 h-48 mx-auto flex items-center justify-center">
                     <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 via-pink-500/10 to-amber-500/20 rounded-full blur-xl animate-pulse"></div>
-                    <div class="absolute w-28 h-28 rounded-full border border-dashed border-aurora-gold/40 animate-[spin_40s_linear_infinite]"></div>
-                    <div id="breathing-guide" class="w-16 h-16 rounded-full bg-gradient-to-tr from-aurora-gold to-yellow-300 flex items-center justify-center shadow-lg shadow-aurora-gold/20 transition-all duration-[4000ms] ease-in-out">
-                        <svg class="w-8 h-8 text-void-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    <div class="absolute w-40 h-40 rounded-full border border-dashed border-aurora-gold/40 animate-[spin_40s_linear_infinite]"></div>
+                    <div id="breathing-guide" class="w-20 h-20 rounded-full bg-gradient-to-tr from-aurora-gold to-yellow-300 flex items-center justify-center shadow-lg shadow-aurora-gold/20 transition-all duration-[4000ms] ease-in-out">
+                        <svg id="breath-icon" class="w-10 h-10 text-void-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="4" stroke-width="1.5"/>
+                            <path stroke-linecap="round" stroke-width="1.2" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
                         </svg>
                     </div>
                     <div id="breath-text" class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-widest text-slate-400 font-light whitespace-nowrap">正在同步你的心率呼吸...</div>
@@ -1078,21 +1079,27 @@
         function startBreathingGuide() {
             const guide = document.getElementById('breathing-guide');
             const breathText = document.getElementById('breath-text');
+            const breathIcon = document.getElementById('breath-icon');
             if (!guide || !breathText) return;
+
+            const moonSVG = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+            const sunSVG = '<circle cx="12" cy="12" r="4" stroke-width="1.5" fill="none"/><path stroke-linecap="round" stroke-width="1.2" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
 
             let isInhale = true;
             setInterval(() => {
                 if (isInhale) {
-                    guide.style.transform = "scale(1.25)";
+                    guide.style.transform = "scale(1.5)";
                     guide.classList.remove('from-aurora-gold', 'to-yellow-300');
                     guide.classList.add('from-indigo-500', 'to-pink-500');
+                    if (breathIcon) breathIcon.innerHTML = moonSVG;
                     breathText.textContent = "吸气... 引导感知沉淀、安静";
                     breathText.classList.remove('text-slate-400');
                     breathText.classList.add('text-indigo-300');
                 } else {
-                    guide.style.transform = "scale(1.0)";
+                    guide.style.transform = "scale(0.85)";
                     guide.classList.remove('from-indigo-500', 'to-pink-500');
                     guide.classList.add('from-aurora-gold', 'to-yellow-300');
+                    if (breathIcon) breathIcon.innerHTML = sunSVG;
                     breathText.textContent = "呼气... 释放堆积在心胸的杂质";
                     breathText.classList.remove('text-indigo-300');
                     breathText.classList.add('text-aurora-gold');
@@ -1309,14 +1316,6 @@
                 String(new Date().getDate()).padStart(2,'0') + '-' +
                 Math.random().toString(36).substring(2,6).toUpperCase();
 
-            // ===== READ ALL FORM DATA FIRST - before any DOM changes =====
-            var _hdName = '', _hdCalendar = '', _hdBirthdate = '', _hdBirthtime = '', _hdBirthplace = '';
-            try { var _el = document.getElementById('booking-hd-name'); _hdName = _el ? _el.value.trim() : ''; } catch(e) {}
-            try { var _el = document.getElementById('booking-hd-calendar'); _hdCalendar = _el ? _el.value : ''; } catch(e) {}
-            try { var _el = document.getElementById('booking-hd-birthdate'); _hdBirthdate = _el ? _el.value : ''; } catch(e) {}
-            try { var _el = document.getElementById('booking-hd-birthtime'); _hdBirthtime = _el ? _el.value : ''; } catch(e) {}
-            try { var _el = document.getElementById('booking-hd-birthplace'); _hdBirthplace = _el ? _el.value.trim() : ''; } catch(e) {}
-
             // Hide payment modal - double insurance
             try { closePaymentModal(); } catch(e) {}
             try { document.getElementById('payment-modal').classList.add('hidden'); } catch(e) {}
@@ -1344,7 +1343,8 @@
             setTimeout(function() {
                 try {
                     var cardInfo = AppState.selectedCardId ? CardData[AppState.selectedCardId] : null;
-                    // hdSection/hdVisible no longer needed - HD data already read above
+                    var hdSection = document.getElementById('hd-section');
+                    var hdVisible = hdSection && !hdSection.classList.contains('hidden');
                     var payMethod = AppState.payMethod || '未知';
                     var timestamp = new Date().toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
                     var bookingName = AppState.bookingData ? (AppState.bookingData.name || '') : '';
@@ -1353,8 +1353,12 @@
                     var bookingSlot = AppState.bookingData ? (AppState.bookingData.slot || '') : '';
                     var bookingTarget = AppState.bookingData ? (AppState.bookingData.target || '') : '';
                     var cardName = cardInfo ? cardInfo.name : '无';
-                    // Use pre-saved HD values (read before form reset)
-                    var hdName = _hdName, hdCalendar = _hdCalendar, hdBirthdate = _hdBirthdate, hdBirthtime = _hdBirthtime, hdBirthplace = _hdBirthplace;
+                    var hdName = '', hdCalendar = '', hdBirthdate = '', hdBirthtime = '', hdBirthplace = '';
+                    try { hdName = (document.getElementById('booking-hd-name') || {}).value; hdName = hdName ? hdName.trim() : ''; } catch(e) {}
+                    try { hdCalendar = (document.getElementById('booking-hd-calendar') || {}).value || ''; } catch(e) {}
+                    try { hdBirthdate = (document.getElementById('booking-hd-birthdate') || {}).value || ''; } catch(e) {}
+                    try { hdBirthtime = (document.getElementById('booking-hd-birthtime') || {}).value || ''; } catch(e) {}
+                    try { hdBirthplace = (document.getElementById('booking-hd-birthplace') || {}).value; hdBirthplace = hdBirthplace ? hdBirthplace.trim() : ''; } catch(e) {}
                     var hasHD = hdName || hdCalendar || hdBirthdate || hdBirthtime || hdBirthplace;
 
                     var submitData = new FormData();
