@@ -1350,7 +1350,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
     var _readingBlob=null,_readingObjURL=null,_readingBookingBlob=null,_readingBookingObjURL=null;
     function loadReadingIframe(force){
         try{
-            var isBooking=parseHash().booking;
+            var isBooking=force?false:parseHash().booking;
             var iframe=document.getElementById('reading-iframe');
             if(!force){
                 if(isBooking && _readingBookingObjURL && iframe.src===_readingBookingObjURL) return;
