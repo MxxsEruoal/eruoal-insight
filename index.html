@@ -1309,7 +1309,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
                     </a>
                     <div class="hidden md:flex items-center space-x-8 text-sm font-light tracking-wider">
                         <a href="#/" class="nav-link text-slate-300">首页</a>
-                        <a href="#/reading" class="nav-link text-slate-300">潜意识本元图谱</a>
+                        <a href="#/reading" onclick="loadReadingIframe(true);" class="nav-link text-slate-300">潜意识本元图谱</a>
                         <a href="#/about" class="nav-link text-slate-300">关于我</a>
                         <a href="#/program" class="nav-link text-slate-300">唤醒—淬炼</a>
                     </div>
@@ -1426,7 +1426,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         var mm=document.getElementById('mobile-menu');if(mm)mm.classList.remove('open');
         window.scrollTo(0,0);
         if(path==='/reading'){
-            loadReadingIframe();
+            loadReadingIframe(!parsed.booking);
             if(parsed.booking){
                 // 立即尝试跳转（iframe可能已加载），失败则onload回调会再试
                 var _rif2=document.getElementById('reading-iframe');
