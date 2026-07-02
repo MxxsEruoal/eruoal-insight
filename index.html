@@ -342,7 +342,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         </div>
         <div class="flex flex-col space-y-7 text-slate-200 font-serif tracking-widest">
             <a href="#/" class="text-base nav-link inline-block self-start active">首页</a>
-            <a href="#/reading" class="text-base nav-link inline-block self-start">潜意识本元图谱</a>
+            <a href="#/reading" onclick="loadReadingIframe(true);" class="text-base nav-link inline-block self-start">潜意识本元图谱</a>
             <a href="#/about" class="text-base nav-link inline-block self-start">关于我</a>
             <a href="#/program" class="text-base nav-link inline-block self-start">唤醒—淬炼</a>
             <a href="#/reading!booking" onclick="window.location.hash='#/reading!booking';setTimeout(function(){route();},100);return false;" class="mt-4 px-5 py-2.5 rounded-full border border-aurora-gold/60 text-aurora-gold text-sm text-center tracking-widest">预约90分钟深度解读</a>
@@ -565,7 +565,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <!-- 路径A：体验 -->
-                    <a href="#/reading!booking" class="path-card explore rounded-2xl p-8 md:p-10 block group">
+                    <a href="#/reading" onclick="loadReadingIframe(true);" class="path-card explore rounded-2xl p-8 md:p-10 block group">
                         <div class="space-y-5">
                             <div class="flex items-center justify-between">
                                 <span class="text-[10px] tracking-[0.3em] font-mono text-motherBlue/80">PATH · A</span>
@@ -674,7 +674,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
                 <div class="flex items-center justify-center space-x-5 text-[11px] text-slate-500 tracking-wider pt-2">
                     <a href="#/" class="hover:text-aurora-gold transition-colors">首页</a>
                     <span class="w-px h-3 bg-stardust"></span>
-                    <a href="#/reading" class="hover:text-aurora-gold transition-colors">潜意识本元图谱</a>
+                    <a href="#/reading" onclick="loadReadingIframe(true);" class="hover:text-aurora-gold transition-colors">潜意识本元图谱</a>
                     <span class="w-px h-3 bg-stardust"></span>
                     <a href="#/about" class="hover:text-aurora-gold transition-colors">关于我</a>
                     <span class="w-px h-3 bg-stardust"></span>
