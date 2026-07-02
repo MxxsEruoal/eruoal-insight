@@ -1349,40 +1349,35 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
 
 
     var _readingHTML=null,_readingBookingHTML=null;
+    // 页面加载后预解码base64，避免首次进入图谱页时卡顿
+    function _decodeReadingB64(){
+        if(_readingHTML)return;
+        try{
+            var b64=document.getElementById('reading-b64').textContent.trim();
+            var bin=atob(b64);
+            var bytes=new Uint8Array(bin.length);
+            for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+            _readingHTML=new TextDecoder('utf-8').decode(bytes);
+            _readingBookingHTML=_readingHTML.replace('id="station-welcome" class="','id="station-welcome" class="hidden ').replace('id="station-booking" class="hidden space-y-12 py-4"','id="station-booking" class="space-y-12 py-4"');
+        }catch(e){console.error('b64 decode failed',e);}
+    }
     function loadReadingIframe(force){
         try{
             var isBooking=force?false:parseHash().booking;
             var iframe=document.getElementById('reading-iframe');
-            if(!force){
-                if(isBooking && _readingBookingHTML && iframe.srcdoc===_readingBookingHTML) return;
-                if(!isBooking && _readingHTML && iframe.srcdoc===_readingHTML) return;
-            }
-            if(isBooking){
-                if(!_readingBookingHTML){
-                    var b64=document.getElementById('reading-b64').textContent.trim();
-                    var bin=atob(b64);
-                    var bytes=new Uint8Array(bin.length);
-                    for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
-                    var html=new TextDecoder('utf-8').decode(bytes);
-                    html=html.replace('id="station-welcome" class="','id="station-welcome" class="hidden ');
-                    html=html.replace('id="station-booking" class="hidden space-y-12 py-4"','id="station-booking" class="space-y-12 py-4"');
-                    _readingBookingHTML=html;
-                }
-                iframe.removeAttribute('src');
-                iframe.srcdoc=_readingBookingHTML;
-            }else{
-                if(!_readingHTML){
-                    var b64=document.getElementById('reading-b64').textContent.trim();
-                    var bin=atob(b64);
-                    var bytes=new Uint8Array(bin.length);
-                    for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
-                    _readingHTML=new TextDecoder('utf-8').decode(bytes);
-                }
-                iframe.removeAttribute('src');
-                iframe.srcdoc=_readingHTML;
-            }
+            var targetHTML=isBooking?_readingBookingHTML:_readingHTML;
+            // 内容未变则不重设srcdoc，避免完整重渲染
+            if(!force && targetHTML && iframe.srcdoc===targetHTML) return;
+            if(force && iframe.srcdoc && iframe.srcdoc===targetHTML) return;
+            _decodeReadingB64();
+            targetHTML=isBooking?_readingBookingHTML:_readingHTML;
+            if(!targetHTML)return;
+            iframe.removeAttribute('src');
+            iframe.srcdoc=targetHTML;
         }catch(e){console.error('iframe load failed',e);}
     }
+    // 页面就绪后空闲时预解码
+    if(document.readyState==='complete'){_decodeReadingB64();}else{window.addEventListener('load',function(){setTimeout(_decodeReadingB64,200);});}
 
     function setNavGlass(glass){
         var nav=document.getElementById('site-nav');
