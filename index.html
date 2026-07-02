@@ -49,7 +49,7 @@
     h1,h2,h3,h4,p,span,li,a,div,button{text-wrap:pretty;}
     .no-orphan{word-break:keep-all;overflow-wrap:anywhere;}
     #app-reading{background:transparent;position:relative;min-height:100vh;}.app-section{display:none;position:relative;z-index:2;}
-    .app-section.active{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;}
+    .app-section.active{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;}#app-reading.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;height:auto;padding-top:64px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
     body.view-reading{overflow:hidden;}
     body.view-reading .app-section:not(#app-reading){display:none!important;}#reading-nav{display:none!important;}
     #app-reading{position:relative;min-height:100vh;}
@@ -1318,7 +1318,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
                     </button>
                 </div>
             </nav>
-            <div id="reading-clip" style="overflow:hidden;position:relative;width:100%;flex:1;min-height:0;margin-top:64px;background:transparent;height:calc(100vh - 64px);height:calc(100dvh - 64px);">
+            <div id="reading-clip" style="overflow:hidden;position:relative;width:100%;flex:1;min-height:0;background:transparent;">
             <iframe id="reading-iframe" sandbox="allow-scripts allow-popups allow-modals allow-same-origin allow-forms" title="潜意识本元图谱" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;background:transparent;" src="about:blank"></iframe>
         </div>
         </section>
