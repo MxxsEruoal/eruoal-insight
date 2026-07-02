@@ -1517,26 +1517,26 @@ window.addEventListener('message', function(e) {
 
 
 <!-- Booking Success Overlay -->
-<div id="booking-success-overlay" style="display:none;position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 30%,rgba(16,40,60,0.95)0%,rgba(5,5,15,0.98)70%);align-items:center;justify-content:center;padding:1.5rem;">
-  <button onclick="document.getElementById('booking-success-overlay').style.display='none';document.body.style.overflow='';try{sessionStorage.removeItem('_bookingSuccess');sessionStorage.removeItem('_bookingOrderId');}catch(e){}" style="position:absolute;top:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.3s;z-index:10;" onmouseover="this.style.background='rgba(245,158,11,0.15)';this.style.borderColor='rgba(245,158,11,0.4)';this.style.color='#f59e0b';" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.5)';">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-  </button>
-  <div style="max-width:32rem;margin:0 auto;padding:2.5rem;text-align:center;border-radius:1.5rem;background:linear-gradient(to bottom,rgba(6,78,59,0.15),transparent);border:1px solid rgba(6,78,59,0.4);animation:bsFloat 3s ease-in-out infinite;">
-    <div style="width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+<div id="booking-success-overlay" style="display:none;position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 30%,rgba(16,40,60,0.95)0%,rgba(5,5,15,0.98)70%);align-items:center;justify-content:center;padding:0.75rem;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="max-width:20rem;width:100%;margin:auto;padding:1.25rem 1rem;text-align:center;border-radius:1rem;background:linear-gradient(to bottom,rgba(6,78,59,0.15),transparent);border:1px solid rgba(6,78,59,0.4);animation:bsFloat 3s ease-in-out infinite;">
+    <div style="width:48px;height:48px;border-radius:50%;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <div style="color:#10b981;font-size:0.8rem;font-weight:500;letter-spacing:0.15em;margin-bottom:0.75rem;text-transform:uppercase;">BOOKING SUCCESSFUL</div>
-    <div style="font-size:1.5rem;font-weight:600;color:#fff;margin-bottom:0.5rem;">你的生命对齐之旅已启航</div>
-    <div style="color:#9ca3af;margin-bottom:2rem;line-height:1.6;">我们已收到你的生命归位意向。</div>
-    <div style="background:rgba(30,41,59,0.6);border-radius:1rem;padding:1.5rem;margin-top:1rem;">
-      <div style="color:#fbbf24;font-weight:500;margin-bottom:1rem;">微信扫码添加专属歌者</div>
-      <img src="https://eruoal.com/images/qr/wechat-friend-qr.png" alt="微信二维码" style="width:200px;height:200px;margin:0 auto;border:2px solid rgba(255,255,255,0.1);border-radius:0.5rem;display:block;">
-      <div style="color:#8b95a5;font-size:0.78rem;line-height:1.7;margin-top:1rem;padding:0.75rem 0.5rem;border-radius:0.5rem;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.1);">
+    <div style="color:#10b981;font-size:0.7rem;font-weight:500;letter-spacing:0.12em;margin-bottom:0.5rem;text-transform:uppercase;">BOOKING SUCCESSFUL</div>
+    <div style="font-size:1.15rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">你的生命对齐之旅已启航</div>
+    <div style="color:#9ca3af;font-size:0.8rem;margin-bottom:0.75rem;">我们已收到你的生命归位意向。</div>
+    <div style="position:relative;background:rgba(30,41,59,0.6);border-radius:0.75rem;padding:1rem 0.75rem 0.75rem;">
+      <button onclick="var o=document.getElementById('booking-success-overlay');o.style.display='none';document.body.style.overflow='';try{sessionStorage.removeItem('_bookingSuccess');sessionStorage.removeItem('_bookingOrderId');}catch(e){}" style="position:absolute;top:0.35rem;right:0.35rem;width:1.65rem;height:1.65rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.3s;z-index:5;padding:0;line-height:1;" onmouseover="this.style.background='rgba(245,158,11,0.2)';this.style.borderColor='rgba(245,158,11,0.5)';this.style.color='#f59e0b';" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.45)';">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div style="color:#fbbf24;font-weight:500;font-size:0.82rem;margin-bottom:0.65rem;padding-right:1.5rem;">微信扫码添加专属歌者</div>
+      <img src="https://eruoal.com/images/qr/wechat-friend-qr.png" alt="微信二维码" style="width:140px;height:140px;margin:0 auto;border:2px solid rgba(255,255,255,0.1);border-radius:0.5rem;display:block;">
+      <div style="color:#8b95a5;font-size:0.72rem;line-height:1.8;margin-top:0.75rem;padding:0.6rem 0.5rem;border-radius:0.5rem;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.1);">
         <span style="color:#fbbf24;">✦ 温馨提示</span><br>
         添加微信时，请附上你的支付订单号<br>
-        <span style="color:#6b7280;">它像一枚落入土壤的种子，是我们认出彼此、接住你归位旅程的第一声回响。</span>
+        <span style="display:block;color:#6b7280;margin-top:0.35rem;line-height:1.75;">「它像一枚落入土壤的种子，<br>是我们认出彼此、<br>接住你归位旅程的第一声回响。」</span>
       </div>
-      <div style="color:#9ca3af;font-size:0.8rem;margin-top:0.75rem;">在线时间：9:00-20:00</div>
+      <div style="color:#9ca3af;font-size:0.7rem;margin-top:0.5rem;">在线时间：9:00-20:00</div>
     </div>
   </div>
 </div>
