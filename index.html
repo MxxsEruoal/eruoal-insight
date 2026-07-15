@@ -43,6 +43,9 @@
         };
     </script>
     <style>
+/* fix: hide blinking caret on non-input elements */
+*:not(input):not(textarea):not([contenteditable="true"]){caret-color:transparent}
+
 
     html{scroll-behavior:smooth;}
     body{background:radial-gradient(ellipse at top,#0d0a21 0%,#060314 60%,#060314 100%);line-height:1.8;}
