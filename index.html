@@ -53,7 +53,7 @@
     h1,h2,h3,h4,p,span,li,a,div,button{text-wrap:pretty;}
     .no-orphan{word-break:keep-all;overflow-wrap:anywhere;}
     #app-reading{background:transparent;position:relative;min-height:100vh;}.app-section{display:none;position:relative;z-index:2;}
-    .app-section.active{display:block;min-height:100vh;min-height:100dvh;overflow:visible;}#app-reading.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;height:auto;padding-top:64px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at top,#0d0a21 0%,#060314 60%,#060314 100%);}
+    .app-section.active{display:block;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;}#app-bazi-booking.active,#app-hd-booking.active{height:auto;min-height:100vh;min-height:100dvh;overflow:visible;}#app-reading.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;height:auto;padding-top:64px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at top,#0d0a21 0%,#060314 60%,#060314 100%);}
     body.view-reading{overflow:hidden;}
     body.view-reading .app-section:not(#app-reading){display:none!important;}#reading-nav{display:none!important;}
     #app-reading{position:relative;min-height:100vh;}
@@ -1375,12 +1375,12 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
             <p class="font-serif text-base md:text-lg text-slate-300 tracking-wider leading-loose no-orphan">看见你的结构卡点<br>30 分钟 · 1 对 1 视频会议</p>
         </div>
         <div class="divider-gold"></div>
-        <div class="space-y-2">
-            <div class="flex items-baseline justify-center space-x-3">
-                <span class="text-xs text-slate-500 font-mono tracking-widest">¥</span>
+        <div class="space-y-5">
+            <div class="flex items-baseline justify-center space-x-2">
+                <span class="text-2xl text-aurora-gold/50 font-mono">¥</span>
                 <span class="font-brand text-5xl md:text-6xl text-aurora-gold tracking-wider">499</span>
             </div>
-            <span class="text-aurora-gold/70 text-xs">· 首发体验价</span>
+            <span class="text-aurora-gold/60 text-xs tracking-[0.3em]">首发体验价</span>
         </div>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <a href="#/bazi-booking" class="glow-button px-8 py-4 bg-gradient-to-r from-aurora-gold to-amber-500 text-void-900 font-serif font-bold tracking-[0.2em] text-sm rounded-full shadow-lg shadow-aurora-gold/20 hover:shadow-aurora-gold/40">预约解读</a>
@@ -1493,7 +1493,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
             <a href="#/bazi" class="text-xs text-slate-500 hover:text-aurora-gold transition tracking-widest">← 返回产品介绍</a>
             <span class="block text-[10px] uppercase tracking-[0.4em] text-aurora-gold/70 font-mono pt-4">BOOKING · 八字解读</span>
             <h1 class="font-serif text-2xl md:text-3xl text-slate-100 tracking-wider">预约八字解读·五行链路</h1>
-            <div class="flex items-baseline justify-center space-x-2 pt-2"><span class="text-xs text-slate-500 font-mono">¥</span><span class="font-brand text-3xl text-aurora-gold">499</span></div>
+            <div class="flex items-baseline justify-center space-x-2 pt-2"><span class="text-xl text-aurora-gold/50 font-mono">¥</span><span class="font-brand text-3xl text-aurora-gold">499</span></div>
         </div>
         <div class="divider-gold"></div>
         <form id="bazi-booking-form" class="space-y-5">
@@ -1553,12 +1553,12 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
             <p class="font-serif text-base md:text-lg text-slate-300 tracking-wider leading-loose no-orphan">认识你的原初设计<br>50 分钟 · 1 对 1 线上解读</p>
         </div>
         <div class="divider-gold"></div>
-        <div class="space-y-2">
-            <div class="flex items-baseline justify-center space-x-3">
-                <span class="text-xs text-slate-500 font-mono tracking-widest">¥</span>
+        <div class="space-y-5">
+            <div class="flex items-baseline justify-center space-x-2">
+                <span class="text-2xl text-aurora-gold/50 font-mono">¥</span>
                 <span class="font-brand text-5xl md:text-6xl text-aurora-gold tracking-wider">799</span>
             </div>
-            <span class="text-aurora-gold/70 text-xs">· 首发体验价</span>
+            <span class="text-aurora-gold/60 text-xs tracking-[0.3em]">首发体验价</span>
         </div>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <a href="#/hd-booking" class="glow-button px-8 py-4 bg-gradient-to-r from-aurora-gold to-amber-500 text-void-900 font-serif font-bold tracking-[0.2em] text-sm rounded-full shadow-lg shadow-aurora-gold/20 hover:shadow-aurora-gold/40">预约解读</a>
@@ -1675,7 +1675,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
             <a href="#/hd" class="text-xs text-slate-500 hover:text-aurora-gold transition tracking-widest">← 返回产品介绍</a>
             <span class="block text-[10px] uppercase tracking-[0.4em] text-aurora-gold/70 font-mono pt-4">BOOKING · 人类图解读</span>
             <h1 class="font-serif text-2xl md:text-3xl text-slate-100 tracking-wider">预约本元图谱·人类图解读</h1>
-            <div class="flex items-baseline justify-center space-x-2 pt-2"><span class="text-xs text-slate-500 font-mono">¥</span><span class="font-brand text-3xl text-aurora-gold">799</span></div>
+            <div class="flex items-baseline justify-center space-x-2 pt-2"><span class="text-xl text-aurora-gold/50 font-mono">¥</span><span class="font-brand text-3xl text-aurora-gold">799</span></div>
         </div>
         <div class="divider-gold"></div>
         <form id="hd-booking-form" class="space-y-5">
