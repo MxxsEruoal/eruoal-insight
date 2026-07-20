@@ -45,6 +45,7 @@
     <style>
 /* fix: hide blinking caret on non-input elements */
 *:not(input):not(textarea):not([contenteditable="true"]){caret-color:transparent}
+    html{scroll-padding-top:80px;}
 
 
     html{scroll-behavior:smooth;}
@@ -52,7 +53,7 @@
     h1,h2,h3,h4,p,span,li,a,div,button{text-wrap:pretty;}
     .no-orphan{word-break:keep-all;overflow-wrap:anywhere;}
     #app-reading{background:transparent;position:relative;min-height:100vh;}.app-section{display:none;position:relative;z-index:2;}
-    .app-section.active{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;}#app-reading.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;height:auto;padding-top:64px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at top,#0d0a21 0%,#060314 60%,#060314 100%);}
+    .app-section.active{display:block;min-height:100vh;min-height:100dvh;overflow:visible;}#app-reading.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;height:auto;padding-top:64px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at top,#0d0a21 0%,#060314 60%,#060314 100%);}
     body.view-reading{overflow:hidden;}
     body.view-reading .app-section:not(#app-reading){display:none!important;}#reading-nav{display:none!important;}
     #app-reading{position:relative;min-height:100vh;}
@@ -253,7 +254,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
 <style>
 .nav-dropdown{position:relative;display:inline-block;}
 .nav-dropdown-trigger{cursor:pointer;user-select:none;}
-.nav-dropdown-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-8px);margin-top:8px;min-width:16rem;background:rgba(6,3,20,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:8px 0;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+.nav-dropdown-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-8px);margin-top:8px;min-width:16rem;background:transparent;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:8px 0;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
 .nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
 .nav-dropdown-item{display:block;padding:10px 20px;font-size:0.8rem;color:rgba(203,213,225,0.8);transition:all 0.2s;white-space:nowrap;}
 .nav-dropdown-item:hover{color:#f59e0b;background:rgba(245,158,11,0.05);}
@@ -368,7 +369,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
             <a href="#/reading" onclick="loadReadingIframe(true);" class="text-base nav-link inline-block self-start">潜意识本元图谱</a>
             <a href="#/about" class="text-base nav-link inline-block self-start">关于我</a>
             <div class="pt-2 pl-3 space-y-4">
-                <span class="text-xs text-aurora-gold/50 tracking-widest">生命解码</span>
+                <span class="text-base text-slate-200 tracking-widest">生命解码</span>
                 <a href="#/bazi" class="text-sm nav-link inline-block self-start text-slate-400">八字解读·五行链路</a>
                 <a href="#/hd" class="text-sm nav-link inline-block self-start text-slate-400">本元图谱·人类图解读</a>
             </div>
@@ -1486,7 +1487,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
 
 <!-- ========== 八字预约表单 ========== -->
 <section id="app-bazi-booking" class="app-section">
-<section class="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16">
+<section class="relative flex flex-col items-center px-6 pt-24 pb-[50vh]">
     <div class="w-full max-w-lg space-y-8">
         <div class="text-center space-y-3">
             <a href="#/bazi" class="text-xs text-slate-500 hover:text-aurora-gold transition tracking-widest">← 返回产品介绍</a>
@@ -1496,16 +1497,16 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         </div>
         <div class="divider-gold"></div>
         <form id="bazi-booking-form" class="space-y-5">
-            <div><label class="bf-label">姓名 *</label><input type="text" name="姓名" required class="bf-input" placeholder="你的称呼"></div>
-            <div><label class="bf-label">微信号 *</label><input type="text" name="微信号" required class="bf-input" placeholder="你的微信号"></div>
-            <div><label class="bf-label">手机号 *</label><input type="tel" name="手机号" required class="bf-input" placeholder="用于联系确认"></div>
+            <div><label class="bf-label" for="bazi-name">姓名 *</label><input id="bazi-name" type="text" name="姓名" required class="bf-input" placeholder="你的称呼"></div>
+            <div><label class="bf-label" for="bazi-wechat">微信号 *</label><input id="bazi-wechat" type="text" name="微信号" required class="bf-input" placeholder="你的微信号"></div>
+            <div><label class="bf-label" for="bazi-phone">手机号 *</label><input id="bazi-phone" type="tel" name="手机号" required class="bf-input" placeholder="用于联系确认"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label class="bf-label">出生年月日时 *</label><input type="text" name="出生年月日时" required class="bf-input" placeholder="如：1990年3月15日 14:30"></div>
-                <div><label class="bf-label">历法</label><select name="历法" class="bf-input bf-select"><option value="公历">公历</option><option value="农历">农历</option></select></div>
+                <div><label class="bf-label" for="bazi-birth">出生年月日时 *</label><input id="bazi-birth" type="text" name="出生年月日时" required class="bf-input" placeholder="如：1990年3月15日 14:30"></div>
+                <div><label class="bf-label" for="bazi-calendar">历法</label><select id="bazi-calendar" name="历法" class="bf-input bf-select"><option value="公历">公历</option><option value="农历">农历</option></select></div>
             </div>
-            <div><label class="bf-label">出生地点 *</label><input type="text" name="出生地点" required class="bf-input" placeholder="省市县/镇/区"></div>
-            <div><label class="bf-label">你想解决的问题</label><textarea name="咨询目标" rows="3" class="bf-input" placeholder="简单描述你当下最困惑的事"></textarea></div>
-            <div><label class="bf-label">支付方式</label><select name="支付方式" class="bf-input bf-select"><option value="微信">微信支付</option><option value="支付宝">支付宝</option></select></div>
+            <div><label class="bf-label" for="bazi-place">出生地点 *</label><input id="bazi-place" type="text" name="出生地点" required class="bf-input" placeholder="省市县/镇/区"></div>
+            <div><label class="bf-label" for="bazi-goal">你想解决的问题</label><textarea id="bazi-goal" name="咨询目标" rows="3" class="bf-input" placeholder="简单描述你当下最困惑的事"></textarea></div>
+            <div><label class="bf-label" for="bazi-pay">支付方式</label><select id="bazi-pay" name="支付方式" class="bf-input bf-select"><option value="微信">微信支付</option><option value="支付宝">支付宝</option></select></div>
             <button type="submit" class="glow-button w-full px-8 py-4 bg-gradient-to-r from-aurora-gold to-amber-500 text-void-900 font-serif font-bold tracking-[0.2em] text-sm rounded-full shadow-lg shadow-aurora-gold/20">提交预约</button>
             <p class="text-center text-[11px] text-slate-500 font-light tracking-wide">提交后成昊会在 24 小时内通过微信联系你<br>线上腾讯会议 · 课前 48 小时可免费改期</p>
         </form>
@@ -1668,7 +1669,7 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
 
 <!-- ========== 人类图预约表单 ========== -->
 <section id="app-hd-booking" class="app-section">
-<section class="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16">
+<section class="relative flex flex-col items-center px-6 pt-24 pb-[50vh]">
     <div class="w-full max-w-lg space-y-8">
         <div class="text-center space-y-3">
             <a href="#/hd" class="text-xs text-slate-500 hover:text-aurora-gold transition tracking-widest">← 返回产品介绍</a>
@@ -1678,16 +1679,16 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         </div>
         <div class="divider-gold"></div>
         <form id="hd-booking-form" class="space-y-5">
-            <div><label class="bf-label">姓名 *</label><input type="text" name="姓名" required class="bf-input" placeholder="你的称呼"></div>
-            <div><label class="bf-label">微信号 *</label><input type="text" name="微信号" required class="bf-input" placeholder="你的微信号"></div>
-            <div><label class="bf-label">手机号 *</label><input type="tel" name="手机号" required class="bf-input" placeholder="用于联系确认"></div>
+            <div><label class="bf-label" for="hd-name">姓名 *</label><input id="hd-name" type="text" name="姓名" required class="bf-input" placeholder="你的称呼"></div>
+            <div><label class="bf-label" for="hd-wechat">微信号 *</label><input id="hd-wechat" type="text" name="微信号" required class="bf-input" placeholder="你的微信号"></div>
+            <div><label class="bf-label" for="hd-phone">手机号 *</label><input id="hd-phone" type="tel" name="手机号" required class="bf-input" placeholder="用于联系确认"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label class="bf-label">出生年月日时 *</label><input type="text" name="出生年月日时" required class="bf-input" placeholder="如：1990年3月15日 14:30"></div>
-                <div><label class="bf-label">历法</label><select name="历法" class="bf-input bf-select"><option value="公历">公历</option><option value="农历">农历</option></select></div>
+                <div><label class="bf-label" for="hd-birth">出生年月日时 *</label><input id="hd-birth" type="text" name="出生年月日时" required class="bf-input" placeholder="如：1990年3月15日 14:30"></div>
+                <div><label class="bf-label" for="hd-calendar">历法</label><select id="hd-calendar" name="历法" class="bf-input bf-select"><option value="公历">公历</option><option value="农历">农历</option></select></div>
             </div>
-            <div><label class="bf-label">出生地点 *</label><input type="text" name="出生地点" required class="bf-input" placeholder="省市县/镇/区"></div>
-            <div><label class="bf-label">你想解决的问题</label><textarea name="咨询目标" rows="3" class="bf-input" placeholder="简单描述你当下最困惑的事"></textarea></div>
-            <div><label class="bf-label">支付方式</label><select name="支付方式" class="bf-input bf-select"><option value="微信">微信支付</option><option value="支付宝">支付宝</option></select></div>
+            <div><label class="bf-label" for="hd-place">出生地点 *</label><input id="hd-place" type="text" name="出生地点" required class="bf-input" placeholder="省市县/镇/区"></div>
+            <div><label class="bf-label" for="hd-goal">你想解决的问题</label><textarea id="hd-goal" name="咨询目标" rows="3" class="bf-input" placeholder="简单描述你当下最困惑的事"></textarea></div>
+            <div><label class="bf-label" for="hd-pay">支付方式</label><select id="hd-pay" name="支付方式" class="bf-input bf-select"><option value="微信">微信支付</option><option value="支付宝">支付宝</option></select></div>
             <button type="submit" class="glow-button w-full px-8 py-4 bg-gradient-to-r from-aurora-gold to-amber-500 text-void-900 font-serif font-bold tracking-[0.2em] text-sm rounded-full shadow-lg shadow-aurora-gold/20">提交预约</button>
             <p class="text-center text-[11px] text-slate-500 font-light tracking-wide">提交后成昊会在 24 小时内通过微信联系你<br>线上腾讯会议 · 课前 48 小时可免费改期</p>
         </form>
@@ -1815,6 +1816,9 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         if(!sections[path])path='/';
         if(path!=='/reading')fromHash='#'+path+anchor;
         Object.keys(sections).forEach(function(p){sections[p].classList.toggle('active',p===path);});
+        var isBooking=(path==='/bazi-booking'||path==='/hd-booking');
+        if(isBooking){document.body.style.overflow='auto';document.body.style.height='auto';document.body.style.overflowX='hidden';}
+        else{document.body.style.overflow='';document.body.style.height='';document.body.style.overflowX='';}
         document.body.classList.toggle('view-reading',path==='/reading');
         setActiveNav(path);
         if(path==="/reading"){setNavGlass(true);}else{setNavGlass(false);}
@@ -1978,6 +1982,10 @@ window.addEventListener('message', function(e) {
         bindSectionAnchors('app-hd');
         bindBookingForm('bazi-booking-form','八字解读·五行链路','¥499','bazi-qr-wechat','bazi-qr-alipay');
         bindBookingForm('hd-booking-form','本元图谱·人类图解读','¥799','hd-qr-wechat','hd-qr-alipay');
+
+        // Mobile keyboard: rely on browser native scroll-into-view behavior
+
+
         observeReveals(document.getElementById('app-home'));
         route();
     }
