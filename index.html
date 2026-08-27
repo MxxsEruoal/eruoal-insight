@@ -245,10 +245,11 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         filter: brightness(0.92) saturate(0.95);
         transform: scale(1.01);
         opacity: 0;
-        transition: opacity 1.5s ease-in-out;
+        transition: opacity 1s ease-in-out;
     }
     .bg-carousel img.active {
         opacity: 1;
+        z-index: 2;
     }
 </style>
 <style>
@@ -283,10 +284,10 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
     <script>
     // bg-carousel sync: uses Date.now() for absolute time reference
     (function(){
-        var CYCLE = 90000;
         var PER_IMAGE = 10000;
         var imgs = document.querySelectorAll('.bg-carousel img');
         if (!imgs.length) return;
+        var CYCLE = PER_IMAGE * imgs.length;
         function updateCarousel() {
             var t = Date.now() % CYCLE;
             var idx = Math.floor(t / PER_IMAGE) % imgs.length;
@@ -298,8 +299,12 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
                 }
             }
         }
-        updateCarousel();
-        setInterval(updateCarousel, 1000);
+        function schedule() {
+            updateCarousel();
+            var remain = PER_IMAGE - (Date.now() % CYCLE) % PER_IMAGE;
+            setTimeout(schedule, remain + 40);
+        }
+        schedule();
     })();
     </script>
 
@@ -331,7 +336,13 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
             <!-- 桌面导航 -->
             <div class="hidden md:flex items-center space-x-8 text-sm font-light tracking-wider">
                 <a href="#/" class="nav-link text-slate-300 active">首页</a>
-                <a href="#/reading" onclick="loadReadingIframe(true);" class="nav-link text-slate-300">潜意识本元图谱</a>
+                <div class="nav-dropdown">
+                    <a class="nav-link text-slate-300 nav-dropdown-trigger">潜意识本元图谱 ▾</a>
+                    <div class="nav-dropdown-menu">
+                        <a href="#/reading" onclick="loadReadingIframe(true);" class="nav-dropdown-item nav-link">灵魂卡牌·初体验</a>
+                        <a href="/soul/" class="nav-dropdown-item nav-link">本元星图·专属星卡</a>
+                    </div>
+                </div>
                 <a href="#/about" class="nav-link text-slate-300">关于我</a>
                 <div class="nav-dropdown">
                     <a class="nav-link text-slate-300 nav-dropdown-trigger">生命解码 ▾</a>
@@ -366,7 +377,11 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
         </div>
         <div class="flex flex-col space-y-7 text-slate-200 font-serif tracking-widest">
             <a href="#/" class="text-base nav-link inline-block self-start active">首页</a>
-            <a href="#/reading" onclick="loadReadingIframe(true);" class="text-base nav-link inline-block self-start">潜意识本元图谱</a>
+            <div class="pt-2 pl-3 space-y-4">
+                <span class="text-base text-slate-200 tracking-widest">潜意识本元图谱</span>
+                <a href="#/reading" onclick="loadReadingIframe(true);" class="text-sm nav-link inline-block self-start text-slate-400">灵魂卡牌·初体验</a>
+                <a href="/soul/" class="text-sm nav-link inline-block self-start text-slate-400">本元星图·专属星卡</a>
+            </div>
             <a href="#/about" class="text-base nav-link inline-block self-start">关于我</a>
             <div class="pt-2 pl-3 space-y-4">
                 <span class="text-base text-slate-200 tracking-widest">生命解码</span>
@@ -1338,7 +1353,13 @@ body { line-height:1.8; background:radial-gradient(ellipse at top,#0d0a21 0%,#06
                     </a>
                     <div class="hidden md:flex items-center space-x-8 text-sm font-light tracking-wider">
                         <a href="#/" class="nav-link text-slate-300">首页</a>
-                        <a href="#/reading" onclick="loadReadingIframe(true);" class="nav-link text-slate-300">潜意识本元图谱</a>
+                <div class="nav-dropdown">
+                            <a class="nav-link text-slate-300 nav-dropdown-trigger">潜意识本元图谱 ▾</a>
+                            <div class="nav-dropdown-menu">
+                                <a href="#/reading" onclick="loadReadingIframe(true);" class="nav-dropdown-item nav-link">灵魂卡牌·初体验</a>
+                                <a href="/soul/" class="nav-dropdown-item nav-link">本元星图·专属星卡</a>
+                            </div>
+                        </div>
                         <a href="#/about" class="nav-link text-slate-300">关于我</a>
                         <a href="#/program" class="nav-link text-slate-300">唤醒—淬炼</a>
                         <div class="nav-dropdown">

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#060314">
+<meta name="robots" content="noindex">
+<title>人类星图</title>
+<style>
+:root{
+  --void-900:#060314; --void-800:#0d0a21; --void-700:#151133;
+  --gold:#f59e0b; --gold-warm:#fbbf24; --gold-soft:rgba(245,158,11,.25);
+  --ink:#e2e8f0; --ink-dim:#94a3b8;
+  --serif:'Noto Serif SC','Songti SC','STSong','SimSun',serif;
+  --sans:-apple-system,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',system-ui,sans-serif;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--void-900);color:var(--ink);font-family:var(--sans);
+  overflow:hidden;position:fixed;inset:0;width:100%;
+  caret-color:transparent;
+}
+button{font:inherit;border:none;background:none;color:inherit;cursor:pointer}
+
+.cosmos{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--void-900)}
+.cosmos img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.9) saturate(.95);opacity:0;transition:opacity 1s ease-in-out}
+.cosmos img.active{opacity:1;z-index:2}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(9,5,29,.55),rgba(5,3,17,.5) 50%,rgba(0,0,0,.6))}
+
+.topnav{position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:calc(var(--sat) + 14px) 22px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(to bottom,rgba(6,3,20,.75),transparent);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.brand{font-family:var(--serif);font-size:13px;letter-spacing:.35em;color:var(--gold);opacity:.9}
+.backlink{font-size:12px;letter-spacing:.2em;color:var(--ink-dim);text-decoration:none;
+  padding:6px 14px;border:1px solid rgba(148,163,184,.25);border-radius:999px;transition:all .3s}
+.backlink:active{color:var(--gold);border-color:var(--gold-soft)}
+
+.gate{position:fixed;inset:0;z-index:100;background:var(--void-900);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  transition:opacity 1.2s ease;gap:26px}
+.gate.hide{opacity:0;pointer-events:none}
+.gate-star{width:64px;height:64px;position:relative}
+.gate-star::before,.gate-star::after{content:'';position:absolute;inset:0;border-radius:50%;
+  border:1px solid var(--gold-soft);animation:ripple 2.2s ease-out infinite}
+.gate-star::after{animation-delay:1.1s}
+.gate-star .core{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;
+  border-radius:50%;background:var(--gold-warm);box-shadow:0 0 18px 4px rgba(251,191,36,.7);
+  animation:pulse 2.2s ease-in-out infinite}
+@keyframes ripple{0%{transform:scale(.35);opacity:0}30%{opacity:.9}100%{transform:scale(1.5);opacity:0}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+.gate-text{font-family:var(--serif);font-size:15px;letter-spacing:.5em;color:var(--ink-dim);
+  text-indent:.5em;animation:gateGlow 2.4s ease-in-out infinite}
+@keyframes gateGlow{0%,100%{opacity:.45}50%{opacity:1}}
+
+.deck{position:absolute;inset:0;z-index:10;overflow-y:auto;overflow-x:hidden;
+  scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;
+  height:100dvh;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.slide{min-height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:calc(var(--sat) + 76px) 26px calc(var(--sab) + 64px);position:relative}
+
+.card{width:min(340px,88vw);perspective:1400px;cursor:pointer;position:relative}
+.card-inner{position:relative;width:100%;aspect-ratio:3/4.35;
+  transform-style:preserve-3d;transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:18px;overflow:hidden;
+  background:linear-gradient(160deg,rgba(21,17,51,.82),rgba(13,10,33,.88));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--gold-soft);
+  box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(245,158,11,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:34px 30px;text-align:center}
+.face.back{transform:rotateY(180deg);
+  background:linear-gradient(200deg,rgba(13,10,33,.92),rgba(6,3,20,.95));
+  justify-content:flex-start;overflow-y:auto;padding:36px 30px}
+.card-no{position:absolute;top:20px;right:24px;font-family:var(--serif);
+  font-size:12px;letter-spacing:.3em;color:rgba(245,158,11,.55)}
+.face .glyph{width:74px;height:74px;margin-bottom:26px;position:relative;flex-shrink:0}
+.face .glyph svg{width:100%;height:100%;filter:drop-shadow(0 0 12px rgba(245,158,11,.5))}
+.face .cat{font-size:11px;letter-spacing:.55em;text-indent:.55em;color:var(--ink-dim);
+  margin-bottom:16px;text-transform:uppercase}
+.face .title{font-family:var(--serif);font-size:27px;letter-spacing:.14em;color:var(--gold-warm);
+  line-height:1.5;margin-bottom:18px;font-weight:600}
+.face .keys{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.face .keys span{font-size:11.5px;letter-spacing:.15em;color:var(--ink);
+  padding:5px 13px;border:1px solid rgba(245,158,11,.35);border-radius:999px;
+  background:rgba(245,158,11,.07)}
+.face .keys span.jump{cursor:pointer;transition:all .25s;border-bottom:1px dashed rgba(245,158,11,.55)}
+.face .keys span.jump:active{transform:scale(.93);background:rgba(245,158,11,.16)}
+.face .keys span.chd::after{content:'⌄';display:inline-block;margin-left:3px;font-size:10px;
+  vertical-align:middle;color:rgba(245,158,11,.85);transition:transform .25s}
+.face .keys span.chd.menu-open::after{transform:rotate(180deg)}
+.card.cover .chmenu{position:absolute;left:50%;z-index:40;top:70%;
+  width:max-content;max-width:min(302px,80vw);min-width:214px;max-height:216px;overflow-y:auto;
+  padding:6px;-webkit-overflow-scrolling:touch;
+  background:linear-gradient(200deg,rgba(13,10,33,.97),rgba(6,3,20,.985));
+  border:1px solid rgba(245,158,11,.42);border-radius:13px;
+  box-shadow:0 18px 44px rgba(0,0,0,.6),0 0 0 1px rgba(245,158,11,.07);
+  opacity:0;visibility:hidden;pointer-events:none;font-style:normal;
+  transition:opacity .22s ease,transform .22s ease,visibility .22s;
+  transform:translateX(-50%) translateY(7px)}
+.card.cover .chmenu::before{content:'';position:absolute;top:-7px;left:50%;margin-left:-7px;
+  border-left:7px solid transparent;border-right:7px solid transparent;
+  border-bottom:7px solid rgba(245,158,11,.45)}
+.card.cover .chmenu.open{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.chmenu b{display:block;padding:9px 12px;margin-top:2px;font-weight:400;
+  font-size:12px;letter-spacing:.05em;line-height:1.55;color:var(--ink);
+  text-align:left;border-radius:9px;border-bottom:1px solid rgba(245,158,11,.13);cursor:pointer}
+.chmenu b:last-child{margin-bottom:0;border-bottom:none}
+.chmenu b:first-child{margin-top:0}
+.chmenu b:active{background:rgba(245,158,11,.17)}
+@media(hover:hover){.chmenu b:hover{background:rgba(245,158,11,.12)}}
+.face .hint{font-size:11px;letter-spacing:.4em;text-indent:.4em;color:rgba(148,163,184,.75);
+  margin-top:14px;animation:hintFloat 2.6s ease-in-out infinite}
+@keyframes hintFloat{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:.95;transform:translateY(-3px)}}
+.face.back .btitle{font-family:var(--serif);font-size:17px;letter-spacing:.3em;color:var(--gold);
+  margin-bottom:20px;flex-shrink:0}
+.face.back .btext{font-family:var(--serif);font-size:14.5px;line-height:2.15;color:var(--ink);
+  letter-spacing:.04em;width:100%}
+.face.back .btext p{margin-bottom:14px;text-align:left}
+.face.back .btext p:last-child{margin-bottom:0}
+.face.back .close-hint{margin-top:auto;padding-top:16px;font-size:10.5px;letter-spacing:.3em;
+  color:rgba(148,163,184,.6);flex-shrink:0}
+
+.cover .face{justify-content:center}
+.cover .date-line{font-size:11px;letter-spacing:.45em;color:var(--ink-dim);margin-top:22px}
+.cover .starfield{position:absolute;inset:0;pointer-events:none;opacity:.7}
+.cover .constellation{width:210px;height:170px;margin-bottom:14px;position:relative}
+.cover .constellation svg{width:100%;height:100%}
+
+.letter .face.back{background:linear-gradient(200deg,rgba(13,10,33,.94),rgba(6,3,20,.97))}
+.letter .btext{font-size:14px;line-height:2.3}
+.letter .sig{margin-top:22px;text-align:right;font-family:var(--serif);
+  color:var(--gold);font-size:13px;letter-spacing:.25em}
+
+.dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;
+  display:flex;flex-direction:column;gap:11px}
+.dots i{width:5px;height:5px;border-radius:50%;background:rgba(148,163,184,.32);
+  transition:all .5s;display:block}
+.dots i.on{background:var(--gold-warm);box-shadow:0 0 8px 2px rgba(251,191,36,.5);transform:scale(1.3)}
+
+.flow-hint{position:fixed;bottom:calc(var(--sab) + 16px);left:0;right:0;z-index:40;
+  text-align:center;font-size:10.5px;letter-spacing:.5em;text-indent:.5em;
+  color:rgba(148,163,184,.6);pointer-events:none;transition:opacity .6s}
+.flow-hint.hide{opacity:0}
+
+.ending{text-align:center;margin-top:4px}
+.ending .forever{font-family:var(--serif);font-size:13px;letter-spacing:.35em;
+  color:var(--ink-dim);margin-bottom:26px}
+.ending .acts{display:flex;flex-direction:column;gap:14px;align-items:center}
+.ending .acts a{font-family:var(--serif);font-size:13px;letter-spacing:.3em;text-indent:.3em;
+  text-decoration:none;padding:13px 34px;border-radius:999px;transition:all .35s}
+.ending .acts .primary{background:linear-gradient(90deg,var(--gold),#d97706);color:#060314;font-weight:700;
+  box-shadow:0 8px 26px rgba(245,158,11,.28)}
+.ending .acts .ghost{color:var(--ink-dim);border:1px solid rgba(148,163,184,.3)}
+.ending .acts a:active{transform:scale(.97)}
+.ending .copy{font-size:10px;letter-spacing:.2em;color:rgba(148,163,184,.4);margin-top:30px}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.85}}
+
+@media (hover:hover){
+  .card:not(.no-flip):hover .card-inner{transform:rotateY(180deg)}
+  .card.flipped:not(.no-flip) .card-inner{transform:rotateY(180deg)}
+  .backlink:hover{color:var(--gold);border-color:var(--gold-soft)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.2s!important}
+  .cosmos img{transition:none}
+}
+@media (min-width:768px){
+  .card{width:380px}
+  .face .title{font-size:30px}
+  .face.back .btext{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<div class="cosmos" aria-hidden="true">
+  <img src="/images/cosmos/cosmos-1.jpg" alt="">
+  <img src="/images/cosmos/cosmos-3.jpg" alt="">
+  <img src="/images/cosmos/cosmos-5.jpg" alt="">
+  <img src="/images/cosmos/cosmos-7.jpg" alt="">
+  <img src="/images/cosmos/cosmos-9.jpg" alt="">
+</div>
+<div class="veil" aria-hidden="true"></div>
+
+<nav class="topnav">
+  <span class="brand">成昊内核教练</span>
+  <a class="backlink" href="/">回到官网</a>
+</nav>
+
+<div class="gate" id="gate">
+  <div class="gate-star"><div class="core"></div></div>
+  <div class="gate-text" id="gateText">正在展开星图</div>
+</div>
+
+<div class="dots" id="dots" aria-hidden="true"></div>
+<div class="flow-hint" id="flowHint">滑动 · 翻阅</div>
+
+<main class="deck" id="deck"></main>
+
+<script>
+window.CARD_DATA = __CARD_DATA_PLACEHOLDER__;
+</script>
+
+<script>
+(function(){
+  var D = window.CARD_DATA;
+  if(!D || !D.meta){ document.body.innerHTML='<p style="padding:40vh 20vw;color:#94a3b8">星图数据缺失</p>'; return; }
+
+  var GLYPHS = {
+    eye:'<svg viewBox="0 0 64 64" fill="none"><path d="M4 32C12 18 22 12 32 12s20 6 28 20c-8 14-18 20-28 20S12 46 4 32z" stroke="#f59e0b" stroke-width="1.6"/><circle cx="32" cy="32" r="9" stroke="#fbbf24" stroke-width="1.6"/><circle cx="32" cy="32" r="3.2" fill="#fbbf24"/><circle cx="53" cy="11" r="1.6" fill="#fbbf24"/><circle cx="10" cy="52" r="1.3" fill="#f59e0b"/></svg>',
+    wave:'<svg viewBox="0 0 64 64" fill="none"><path d="M6 40c6-14 12-14 18 0s12 14 18 0 10-9 16-2" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><circle cx="32" cy="12" r="2" fill="#fbbf24"/><circle cx="14" cy="10" r="1.3" fill="#f59e0b"/><circle cx="52" cy="54" r="1.3" fill="#f59e0b"/></svg>',
+    channel:'<svg viewBox="0 0 64 64" fill="none"><circle cx="14" cy="50" r="5" stroke="#f59e0b" stroke-width="1.6"/><circle cx="50" cy="14" r="5" stroke="#fbbf24" stroke-width="1.6"/><path d="M17 46L47 18" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="4 4"/><circle cx="32" cy="32" r="2.4" fill="#fbbf24"/></svg>',
+    profile:'<svg viewBox="0 0 64 64" fill="none"><circle cx="24" cy="24" r="7" stroke="#f59e0b" stroke-width="1.6"/><path d="M12 50c0-8 5.4-14 12-14s12 6 12 14" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round"/><path d="M42 30c6 0 10 5 10 12" stroke="#f59e0b" stroke-width="1.3" stroke-linecap="round" opacity=".55"/><circle cx="52" cy="16" r="1.6" fill="#fbbf24"/></svg>',
+    letter:'<svg viewBox="0 0 64 64" fill="none"><rect x="12" y="18" width="40" height="30" rx="3" stroke="#f59e0b" stroke-width="1.6"/><path d="M12 20l20 15 20-15" stroke="#fbbf24" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8" cy="10" r="1.3" fill="#f59e0b"/><circle cx="56" cy="56" r="1.3" fill="#fbbf24"/></svg>'
+  };
+
+  function starField(){
+    var s='',n=26;
+    for(var i=0;i<n;i++){
+      var x=(Math.random()*100).toFixed(1), y=(Math.random()*100).toFixed(1),
+          r=(Math.random()*1.4+.4).toFixed(1), o=(Math.random()*.5+.2).toFixed(2),
+          d=(Math.random()*4+2).toFixed(1);
+      s+='<i style="position:absolute;left:'+x+'%;top:'+y+'%;width:'+r+'px;height:'+r+'px;border-radius:50%;background:#fbbf24;opacity:'+o+';animation:twinkle '+d+'s ease-in-out infinite;animation-delay:-'+(Math.random()*4).toFixed(1)+'s"></i>';
+    }
+    return '<span class="starfield">'+s+'</span>';
+  }
+
+  function cardSlide(idx,cat,glyph,title,keys,paras,cls){
+    var keysHtml = (keys||[]).map(function(k){return '<span>'+k+'</span>'}).join('');
+    var backHtml = paras.map(function(p){return '<p>'+p+'</p>'}).join('');
+    return '<section class="slide"><div class="card '+(cls||'')+'" data-i="'+idx+'">'
+      + '<div class="card-inner">'
+      + '<div class="face front">'+ starField()
+      + '<div class="card-no">'+idx+'</div>'
+      + '<div class="glyph">'+(GLYPHS[glyph]||GLYPHS.channel)+'</div>'
+      + '<div class="cat">'+cat+'</div>'
+      + '<div class="title">'+title+'</div>'
+      + '<div class="keys">'+keysHtml+'</div>'
+      + '<div class="hint">轻触 · 翻开</div>'
+      + '</div>'
+      + '<div class="face back"><div class="btitle">'+title+'</div>'
+      + '<div class="btext">'+backHtml+'</div>'
+      + '<div class="close-hint">轻触 · 合上</div></div>'
+      + '</div></div></section>';
+  }
+
+  var deck=document.getElementById('deck'), html='';
+
+  html+='<section class="slide"><div class="card cover no-flip" data-i="·">'
+    +'<div class="card-inner"><div class="face front">'+starField()
+    +'<div class="constellation"><svg viewBox="0 0 210 170" fill="none">'
+    +'<path d="M30 120 L75 88 L120 96 L150 48 L186 66" stroke="rgba(245,158,11,.55)" stroke-width="1"/>'
+    +'<path d="M75 88 L96 40 L150 48" stroke="rgba(245,158,11,.3)" stroke-width="1"/>'
+    +'<circle cx="30" cy="120" r="3" fill="#fbbf24"/><circle cx="75" cy="88" r="4.5" fill="#fbbf24" opacity=".9"/>'
+    +'<circle cx="120" cy="96" r="3" fill="#f59e0b"/><circle cx="150" cy="48" r="5.5" fill="#fbbf24"/>'
+    +'<circle cx="186" cy="66" r="2.6" fill="#f59e0b"/><circle cx="96" cy="40" r="2.2" fill="#fbbf24" opacity=".8"/>'
+    +'</svg></div>'
+    +'<div class="cat">HUMAN STARCHART</div>'
+    +'<div class="title">'+D.meta.name+' · 人类星图</div>'
+    +'<div class="keys">'
+    +'<span class="jump" data-goto="1">类型</span>'
+    +'<span class="jump" data-goto="2">内在权威</span>'
+    +(function(){var n=(D.channels||[]).length;if(n<1)return '<span>天赋通道</span>';
+    if(n>1){window.CH_MENU='';for(var i=0;i<n;i++){var nm=(D.channels[i]&&D.channels[i].name)||('天赋通道 '+(i+1));CH_MENU+='<b data-goto="'+(3+i)+'">'+nm+'</b>'}}
+    return '<span class="jump chd"'+(n===1?' data-goto="3"':'')+'>天赋通道</span>'})()
+    +'<span class="jump" data-goto="'+(3+(D.channels||[]).length)+'">人生角色</span>'
+    +'<span class="jump" data-goto="'+(4+(D.channels||[]).length)+'">一封信</span>'
+    +'</div>'
+    +'<div class="hint">上滑 · 展开</div>'
+    +'<div class="date-line">'+(D.meta.birthLine||'')+'</div>'
+    +(D.meta.demo?'<div class="date-line" style="color:rgba(245,158,11,.6);margin-top:10px">示例星图 · 供体验</div>':'')
+    +'</div></div></div></section>';
+
+  var no=1, list=[];
+  list.push(['type','你的类型','TYPE']);
+  list.push(['authority','内在权威','AUTHORITY']);
+  (D.channels||[]).forEach(function(c,i){ list.push(['ch'+i,'天赋通道 '+(i+1)+'/'+(D.channels.length),'CHANNEL']); });
+  list.push(['profile','人生角色','PROFILE']);
+  list.push(['letter','写给你的信','LETTER']);
+
+  list.forEach(function(it){
+    var t;
+    if(it[0]==='letter'){
+      html+=cardSlide(list.length, it[1], 'letter', '一封信', null,
+        D.letter.concat('__SIG__'), 'letter');
+      return;
+    }
+    if(it[0]==='type') t=D.type;
+    else if(it[0]==='authority') t=D.authority;
+    else if(it[0]==='profile') t=D.profile;
+    else if(it[0].indexOf('ch')===0) t=D.channels[parseInt(it[0].slice(2),10)];
+    html+=cardSlide(no, it[1], t.glyph||(it[0].indexOf('ch')===0?'channel':'eye'), t.name, t.keys, t.text, '');
+    no++;
+  });
+
+  html+='<section class="slide"><div class="ending">'
+    +'<div class="glyph" style="width:60px;height:60px;margin:0 auto 30px;filter:drop-shadow(0 0 12px rgba(245,158,11,.5))">'+GLYPHS.eye+'</div>'
+    +'<div class="forever">这张星图 · 永久为你保留</div>'
+    +'<div class="acts">'
+    +'<a class="primary" href="javascript:void(0)" id="backTop">回到开篇</a>'
+    +'<a class="ghost" href="/">成昊内核教练 · 官网</a>'
+    +'</div>'
+    +'<div class="copy">人类星图 · 由成昊内核教练解读生成</div>'
+    +'</div></section>';
+
+  deck.innerHTML=html;
+
+  var sigP=document.querySelector('.letter .btext');
+  if(sigP){ sigP.innerHTML=sigP.innerHTML.replace('<p>__SIG__</p>','<p class="sig">—— '+D.sig+'</p>'); }
+
+  (function(){
+    var n=(D.channels||[]).length, cv=document.querySelector('.card.cover'), tr=document.querySelector('.chd');
+    if(n>1&&cv&&tr&&window.CH_MENU){
+      var m=document.createElement('i'); m.className='chmenu'; m.innerHTML=CH_MENU;
+      m.style.top=(tr.offsetTop+tr.offsetHeight+12)+'px';
+      cv.appendChild(m);
+    }
+  })();
+
+  function goSlide(i){deck.scrollTo({top:i*deck.clientHeight,behavior:'smooth'})}
+  var chOpen=null;
+  function closeCh(){if(chOpen){chOpen.classList.remove('open');var t=chOpen._t;if(t)t.classList.remove('menu-open');chOpen=null;}}
+  function toggleChMenu(tr){
+    var m=document.querySelector('.card.cover .chmenu');
+    if(!m){ goSlide(3); return; }
+    if(chOpen===m){ closeCh(); return; }
+    closeCh();
+    m.classList.add('open'); tr.classList.add('menu-open'); chOpen=m; chOpen._t=tr;
+  }
+  deck.addEventListener('click',function(e){
+    var mb=e.target.closest?e.target.closest('.chmenu b'):null;
+    if(mb){ var g=parseInt(mb.getAttribute('data-goto'),10); if(!isNaN(g)){ goSlide(g); } closeCh(); return; }
+    var cd=e.target.closest?e.target.closest('.chd'):null;
+    if(cd){ toggleChMenu(cd); return; }
+    var j=e.target.closest?e.target.closest('.jump'):null;
+    if(j){ var gi=parseInt(j.getAttribute('data-goto'),10); if(!isNaN(gi)){ goSlide(gi); } return; }
+    var c=e.target.closest?e.target.closest('.card'):null;
+    if(c && c.dataset.i!=='·'){ c.classList.toggle('flipped'); }
+  });
+  document.addEventListener('click',function(e){
+    if(chOpen && !(e.target.closest && e.target.closest('.chd'))) closeCh();
+  });
+  deck.addEventListener('scroll',function(){ closeCh(); },{passive:true});
+
+  var dots=document.getElementById('dots'), slides=deck.querySelectorAll('.slide');
+  slides.forEach(function(){dots.appendChild(document.createElement('i'))});
+  var dEls=dots.querySelectorAll('i'), flowHint=document.getElementById('flowHint'), hinted=false;
+  function syncDots(){
+    var idx=Math.round(deck.scrollTop/deck.clientHeight);
+    dEls.forEach(function(d,i){d.classList.toggle('on',i===idx)});
+    if(idx>0&&!hinted){hinted=true;flowHint.classList.add('hide');}
+  }
+  deck.addEventListener('scroll',function(){requestAnimationFrame(syncDots)},{passive:true});
+  syncDots();
+
+  var backTop=document.getElementById('backTop');
+  if(backTop){backTop.addEventListener('click',function(e){e.preventDefault();deck.scrollTo({top:0,behavior:'smooth'})})}
+
+  document.addEventListener('keydown',function(e){
+    var idx=Math.round(deck.scrollTop/deck.clientHeight);
+    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){goSlide(Math.min(idx+1,slides.length-1));e.preventDefault();}
+    if(e.key==='ArrowUp'||e.key==='PageUp'){goSlide(Math.max(idx-1,0));e.preventDefault();}
+  });
+
+  (function(){
+    var PER=10000, imgs=document.querySelectorAll('.cosmos img');
+    if(!imgs.length)return;
+    var CYCLE=PER*imgs.length;
+    function upd(){
+      var t=Date.now()%CYCLE, idx=Math.floor(t/PER)%imgs.length;
+      for(var i=0;i<imgs.length;i++){imgs[i].classList.toggle('active',i===idx)}
+    }
+    function loop(){upd();var remain=PER-(Date.now()%CYCLE)%PER;setTimeout(loop,remain+40)}
+    loop();
+  })();
+
+  document.title=D.meta.name+' · 人类星图';
+  setTimeout(function(){document.getElementById('gateText').textContent='正在展开星图 · '+D.meta.name},600);
+  setTimeout(function(){document.getElementById('gate').classList.add('hide')},1700);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060314">
+<meta name="description" content="你的人类星图 · 成昊内核教练 1对1 人类图深度解读">
+<title>你的人类星图 · 成昊内核教练</title>
+<style>
+:root{
+  --void-900:#060314; --void-800:#0d0a21; --void-700:#151133;
+  --gold:#f59e0b; --gold-warm:#fbbf24; --gold-soft:rgba(245,158,11,.25);
+  --ink:#e2e8f0; --ink-dim:#94a3b8;
+  --serif:'Noto Serif SC','Songti SC','STSong','SimSun',serif;
+  --sans:-apple-system,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',system-ui,sans-serif;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--void-900);color:var(--ink);font-family:var(--sans);min-height:100dvh;caret-color:transparent}
+
+.cosmos{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--void-900)}
+.cosmos img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.85) saturate(.92);opacity:0;transition:opacity 1s ease-in-out}
+.cosmos img.active{opacity:1;z-index:2}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(9,5,29,.6),rgba(5,3,17,.55) 50%,rgba(0,0,0,.65))}
+
+.topnav{position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:calc(var(--sat) + 14px) 22px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(to bottom,rgba(6,3,20,.8),transparent);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.brand{font-family:var(--serif);font-size:13px;letter-spacing:.35em;color:var(--gold);opacity:.9}
+.backlink{font-size:12px;letter-spacing:.2em;color:var(--ink-dim);text-decoration:none;
+  padding:6px 14px;border:1px solid rgba(148,163,184,.25);border-radius:999px;transition:all .3s}
+.backlink:active{color:var(--gold);border-color:var(--gold-soft)}
+
+main{position:relative;z-index:10;max-width:640px;margin:0 auto;
+  padding:calc(var(--sat) + 110px) 26px calc(var(--sab) + 70px)}
+
+.hero{text-align:center;margin-bottom:56px}
+.hero .cat{font-size:11px;letter-spacing:.6em;text-indent:.6em;color:var(--ink-dim);margin-bottom:20px}
+.hero h1{font-family:var(--serif);font-size:34px;letter-spacing:.16em;color:var(--gold-warm);
+  font-weight:600;line-height:1.4;margin-bottom:18px}
+.hero p{font-family:var(--serif);font-size:14.5px;line-height:2.1;color:var(--ink-dim);letter-spacing:.05em}
+.hero .starmap{width:150px;height:110px;margin:0 auto 8px}
+.hero .starmap svg{width:100%;height:100%;filter:drop-shadow(0 0 16px rgba(245,158,11,.35))}
+
+.panel{border:1px solid var(--gold-soft);border-radius:20px;
+  background:linear-gradient(165deg,rgba(21,17,51,.75),rgba(13,10,33,.85));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:34px 28px;margin-bottom:26px;
+  box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(245,158,11,.16)}
+
+.panel .tag{display:inline-block;font-size:10.5px;letter-spacing:.45em;text-indent:.45em;
+  color:var(--gold);border:1px solid rgba(245,158,11,.35);border-radius:999px;
+  padding:5px 14px;margin-bottom:20px}
+
+.enter-zone h2{font-family:var(--serif);font-size:19px;letter-spacing:.22em;color:var(--ink);margin-bottom:10px}
+.enter-zone .desc{font-size:13px;color:var(--ink-dim);line-height:1.9;margin-bottom:24px;letter-spacing:.03em}
+.code-row{display:flex;flex-direction:column;gap:14px}
+.code-row input{width:100%;box-sizing:border-box;font-size:17px;letter-spacing:.5em;text-indent:.2em;
+  font-family:var(--serif);color:var(--gold-warm);text-align:center;text-transform:lowercase;
+  background:rgba(6,3,20,.7);border:1px solid rgba(148,163,184,.3);border-radius:12px;
+  padding:15px 10px;outline:none;caret-color:var(--gold);transition:border .3s}
+.code-row input:focus{border-color:var(--gold)}
+.code-row input::placeholder{letter-spacing:.2em;color:rgba(148,163,184,.4);font-size:13px}
+.code-row button{font-family:var(--serif);font-size:14px;letter-spacing:.3em;text-indent:.3em;
+  align-self:center;padding:13px 46px;border-radius:12px;color:#060314;font-weight:700;
+  background:linear-gradient(90deg,var(--gold),#d97706);box-shadow:0 8px 26px rgba(245,158,11,.28);
+  transition:transform .2s}
+.code-row button:active{transform:scale(.96)}
+.code-row button:disabled{opacity:.55}
+.enter-msg{margin-top:16px;font-size:12.5px;letter-spacing:.1em;min-height:18px;transition:all .3s}
+.enter-msg.err{color:#f87171}
+.enter-msg.ok{color:var(--gold-warm)}
+
+.guide-zone .steps{display:flex;flex-direction:column;gap:18px;margin-bottom:4px}
+.door{display:block;padding-top:6px}
+.ln{display:block}
+.nw{white-space:nowrap}
+.order-panel{margin-top:34px;border-top:1px solid rgba(245,158,11,.18);padding-top:28px;text-align:left}
+.order-head h3{font-family:var(--serif);font-size:17px;letter-spacing:.18em;color:var(--ink);text-align:center}
+.order-head .price-line{text-align:center;margin:10px 0 4px}
+.price-old{font-size:13px;color:rgba(148,163,184,.55);text-decoration:line-through;margin-right:10px}
+.price-now{font-family:var(--serif);font-size:26px;color:var(--gold-warm);letter-spacing:.05em}
+.price-note{font-size:11px;color:var(--ink-dim);text-align:center;letter-spacing:.06em;margin-bottom:22px}
+.og-label{display:block;font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:8px}
+.og-input{width:100%;box-sizing:border-box;font-family:inherit;font-size:15px;color:var(--gold-warm);letter-spacing:.04em;
+  background:rgba(6,3,20,.65);border:1px solid rgba(148,163,184,.3);border-radius:10px;
+  padding:13px 14px;outline:none;caret-color:var(--gold);transition:border .3s;margin-bottom:16px}
+.og-input:focus{border-color:var(--gold)}
+.og-input::placeholder{color:rgba(148,163,184,.38);font-size:13px}
+textarea.og-input{resize:none;line-height:1.8;font-size:14px;width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.pay-row{display:flex;gap:12px;margin-bottom:24px}
+.pay-opt{flex:1;text-align:center;font-family:var(--serif);font-size:14px;letter-spacing:.15em;color:var(--ink-dim);
+  border:1px solid rgba(148,163,184,.3);border-radius:10px;padding:12px 0;cursor:pointer;transition:all .25s;user-select:none}
+.pay-opt.sel{color:#060314;font-weight:700;border-color:transparent;background:linear-gradient(90deg,var(--gold),#d97706);box-shadow:0 6px 22px rgba(245,158,11,.3)}
+.ord-submit{width:100%;font-family:var(--serif);font-size:15px;letter-spacing:.35em;text-indent:.35em;padding:15px 0;
+  border-radius:12px;color:#060314;font-weight:700;background:linear-gradient(90deg,var(--gold),#d97706);
+  box-shadow:0 8px 26px rgba(245,158,11,.28);border:none;cursor:pointer;transition:transform .2s}
+.ord-submit:active{transform:scale(.97)}
+.ord-tip{text-align:center;font-size:11px;line-height:1.9;color:var(--ink-dim);letter-spacing:.05em;margin-top:16px}
+.step{display:flex;gap:16px;align-items:flex-start}
+.step .n{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(245,158,11,.4);color:var(--gold-warm);font-family:var(--serif);font-size:13px;
+  background:rgba(245,158,11,.06)}
+.step .t{font-size:13.5px;color:var(--ink);line-height:1.9;letter-spacing:.03em}
+.step .t b{color:var(--gold-warm);font-weight:600}
+
+.acts{display:flex;flex-direction:column;gap:13px;margin-top:26px}
+.acts a{text-align:center;font-family:var(--serif);font-size:14px;letter-spacing:.3em;text-indent:.3em;
+  text-decoration:none;padding:15px 20px;border-radius:999px;transition:all .35s}
+.acts .primary{background:linear-gradient(90deg,var(--gold),#d97706);color:#060314;font-weight:700;
+  box-shadow:0 8px 26px rgba(245,158,11,.28)}
+.acts .ghost{color:var(--ink);border:1px solid rgba(245,158,11,.35);cursor:pointer;
+  background:rgba(245,158,11,.05)}
+.acts a:active{transform:scale(.97)}
+
+.foot{text-align:center;margin-top:44px}
+.foot .line{font-size:11px;letter-spacing:.4em;color:rgba(148,163,184,.55);margin-bottom:14px}
+.foot a{font-size:12px;letter-spacing:.25em;color:var(--ink-dim);text-decoration:none;
+  border-bottom:1px solid rgba(148,163,184,.3);padding-bottom:3px}
+
+@media (hover:hover){
+  .backlink:hover{color:var(--gold);border-color:var(--gold-soft)}
+  .acts a:hover{transform:translateY(-2px)}
+  .code-row button:hover:not(:disabled){box-shadow:0 10px 30px rgba(245,158,11,.4)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.2s!important}}
+@media (min-width:768px){
+  main{padding-top:calc(var(--sat) + 130px)}
+  .hero h1{font-size:40px}
+}
+</style>
+</head>
+<body>
+
+<div class="cosmos" aria-hidden="true">
+  <img src="/images/cosmos/cosmos-2.jpg" alt="">
+  <img src="/images/cosmos/cosmos-4.jpg" alt="">
+  <img src="/images/cosmos/cosmos-6.jpg" alt="">
+  <img src="/images/cosmos/cosmos-8.jpg" alt="">
+</div>
+<div class="veil" aria-hidden="true"></div>
+
+<nav class="topnav">
+  <span class="brand">成昊内核教练</span>
+  <a class="backlink" href="/">回到官网</a>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="starmap">
+      <svg viewBox="0 0 210 150" fill="none">
+        <path d="M28 108 L70 74 L118 84 L150 38 L188 56" stroke="rgba(245,158,11,.6)" stroke-width="1.1"/>
+        <path d="M70 74 L92 30 L150 38" stroke="rgba(245,158,11,.32)" stroke-width="1"/>
+        <circle cx="28" cy="108" r="3" fill="#fbbf24"/>
+        <circle cx="70" cy="74" r="4.5" fill="#fbbf24" opacity=".9"/>
+        <circle cx="118" cy="84" r="3" fill="#f59e0b"/>
+        <circle cx="150" cy="38" r="5.5" fill="#fbbf24"/>
+        <circle cx="188" cy="56" r="2.6" fill="#f59e0b"/>
+        <circle cx="92" cy="30" r="2.2" fill="#fbbf24" opacity=".8"/>
+        <circle cx="42" cy="28" r="1.4" fill="#f59e0b" opacity=".6"/>
+        <circle cx="176" cy="112" r="1.6" fill="#fbbf24" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="cat">HUMAN STARCHART</div>
+    <h1>你的人类星图</h1>
+    <p>出生那一刻，宇宙为你按下了一组坐标。<br>它一直在那里，等你回来看一眼。</p>
+  </section>
+
+  <section class="panel enter-zone">
+    <span class="tag">我已有一张星图</span>
+    <h2>专属码进入</h2>
+    <div class="desc">解读完成后，你会收到一串专属码。输入它，展开属于你的星图。</div>
+    <div class="code-row">
+      <input id="codeInput" type="text" placeholder="输入专属码" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button id="codeGo">进入</button>
+    </div>
+    <div class="enter-msg" id="codeMsg"></div>
+  </section>
+
+  <section class="panel guide-zone">
+    <span class="tag">我想看一张</span>
+    <h2>星图从哪里来</h2>
+    <div class="steps" style="margin-top:22px">
+      <div class="step"><div class="n">壹</div><div class="t"><b>这是一份生命指引</b><br>不看吉凶，不贴标签。它只是把你出生一刻自带的运作方式，静静摊开给你看——怎么充电、怎么做决定、哪里藏着你没认领的天赋。</div></div>
+      <div class="step"><div class="n">贰</div><div class="t"><b>解读沉淀为星图</b><br>类型 · 内在权威 · 天赋通道 · 人生角色 · 一封写给你的信，<span style="white-space:nowrap">凝聚成一张专属页面</span>。</div></div>
+      <div class="step"><div class="n">叁</div><div class="t"><b>永久为你保留</b><br>专属链接不会过期。迷路的时候，随时回来，看看自己本来的样子。</div></div>
+      <div class="step"><div class="n">肆</div><div class="t"><b>更深处，随时等你</b><br><span class="ln">若某天想展开一次完整的人类图解读<span class="nw">（常设 ¥799），</span></span><span class="ln">凭这张星图的专属码可直接抵扣——</span><span class="ln"><span class="nw">2026 年内双倍抵扣；</span>此后每年一倍，直至用完。</span><span class="ln">这份心意不会过期。</span><span class="door">不急，这扇门一直为你留着。</span></div></div>
+    </div>
+    <div class="acts">
+      <a class="primary" href="/soul/c/demo8321/">先看一张示例星图</a>
+      <a class="ghost" id="openOrder">定制我的星图 · ¥99</a>
+    </div>
+
+    <div class="order-panel" id="order-panel">
+      <div id="soul-order-head">
+        <div class="order-head">
+          <h3>定制我的星图</h3>
+          <div class="price-line"><span class="price-old">¥199</span><span class="price-now">¥99</span></div>
+          <p class="price-note">一个人 · 一张星卡 · 一封写给自己的信</p>
+        </div>
+        <form id="ord-form" novalidate>
+          <input type="hidden" name="订单编号" id="ord-no" value="">
+          <input type="hidden" name="订单类型" value="本元星图·专属星卡">
+          <input type="hidden" name="商品价格" value="¥99">
+          <label class="og-label" for="ord-name">你的称呼 *</label>
+          <input class="og-input" id="ord-name" type="text" name="姓名" maxlength="20" placeholder="怎么称呼你">
+          <label class="og-label" for="ord-wechat">微信号 *</label>
+          <input class="og-input" id="ord-wechat" type="text" name="微信号" maxlength="40" placeholder="用于交付星图和专属码">
+          <label class="og-label" for="ord-phone">手机号 *</label>
+          <input class="og-input" id="ord-phone" type="tel" name="手机号" maxlength="20" placeholder="联系不上微信时使用">
+          <div class="grid2">
+            <div>
+              <label class="og-label" for="ord-birth">出生年月日时 *</label>
+              <input class="og-input" id="ord-birth" type="text" name="出生年月日时" maxlength="30" placeholder="如：1990年3月15日 14:30">
+            </div>
+            <div>
+              <label class="og-label" for="ord-calendar">历法 *</label>
+              <select class="og-input" id="ord-calendar" name="历法"><option value="公历">公历</option><option value="农历">农历</option><option value="不确定">不确定</option></select>
+            </div>
+          </div>
+          <label class="og-label" for="ord-place">出生地点 *</label>
+          <input class="og-input" id="ord-place" type="text" name="出生地点" maxlength="50" placeholder="省市县/镇/区，越精确越准">
+          <label class="og-label">选择支付方式 *</label>
+          <input type="hidden" name="支付方式" id="ord-pay" value="微信">
+          <div class="pay-row">
+            <div class="pay-opt sel" data-v="微信">微信支付</div>
+            <div class="pay-opt" data-v="支付宝">支付宝</div>
+          </div>
+          <button type="submit" class="ord-submit">下一步：扫码支付</button>
+          <p class="ord-tip">提交后请扫码完成支付 · 成昊会在 24 小时内交付你的专属星图<br>全程一对一处理，不会泄露任何信息</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="soul-booking-success" style="display:none;position:fixed;inset:0;z-index:120;background:radial-gradient(ellipse at 50% 30%,rgba(21,17,51,.96) 0%,rgba(6,3,20,.98) 70%);align-items:center;justify-content:center;padding:1rem;">
+    <div id="soul-pay-stage" class="max-w-sm text-center space-y-6 p-8">
+      <h3 style="font-family:var(--serif);font-size:19px;letter-spacing:.2em;color:var(--ink)">请扫码支付 ¥99</h3>
+      <div class="flex justify-center" style="display:flex;justify-content:center">
+        <img id="ord-qr-wechat" src="qr-hd-wechat.png" alt="微信收款码" style="width:220px;height:220px;border-radius:14px;display:block">
+        <img id="ord-qr-alipay" src="qr-hd-alipay.jpg" alt="支付宝收款码" style="width:220px;height:220px;border-radius:14px;display:none">
+      </div>
+      <p style="font-size:13px;color:var(--ink-dim);line-height:1.9">扫码备注「星图」<br>支付后点击下方按钮确认</p>
+      <div><button id="ord-pay-confirm" class="ord-submit" style="width:auto;padding:13px 42px">已完成支付</button></div>
+    </div>
+    <div id="soul-pay-done" class="max-w-md text-center space-y-6 p-8" style="display:none">
+      <div style="font-size:44px;color:var(--gold)">✦</div>
+      <h3 style="font-family:var(--serif);font-size:22px;letter-spacing:.22em;color:var(--ink)">已收到你的定制请求</h3>
+      <p style="font-size:13px;color:var(--ink-dim);line-height:2">支付核对无误后，星图将在 24 小时内<br>以专属链接与专属码的形式送到你手上</p>
+      <div style="padding-top:8px">
+        <button class="ord-submit" id="ord-back-order" style="width:auto;padding:13px 36px;margin-right:10px">返回重新填写</button>
+        <button class="ord-submit" id="ord-back-home" style="width:auto;padding:13px 36px;background:linear-gradient(135deg,#1e1b4b,#151133);color:var(--gold-warm);box-shadow:none">关闭</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot"
+>
+    <div class="line">看见 · 本来 · 光</div>
+    <a href="/">成昊内核教练 · 官网</a>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var PER=10000, imgs=document.querySelectorAll('.cosmos img');
+  if(imgs.length){
+    var CYCLE=PER*imgs.length;
+    (function loop(){
+      var t=Date.now()%CYCLE, idx=Math.floor(t/PER)%imgs.length;
+      for(var i=0;i<imgs.length;i++){imgs[i].classList.toggle('active',i===idx)}
+      var remain=PER-(Date.now()%CYCLE)%PER;
+      setTimeout(loop,remain+40);
+    })();
+  }
+
+  var input=document.getElementById('codeInput'), btn=document.getElementById('codeGo'), msg=document.getElementById('codeMsg');
+  function show(text,cls){msg.textContent=text;msg.className='enter-msg '+cls}
+  function go(){
+    var code=(input.value||'').trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+    if(!code){show('请输入你的专属码','err');input.focus();return}
+    if(code.length<6){show('专属码长度不对，请核对后重试','err');input.focus();return}
+    show('正在寻找你的星图…','ok');
+    btn.disabled=true;
+    fetch('/soul/c/'+code+'/data.json',{cache:'no-store'})
+      .then(function(r){
+        if(r.ok){location.replace('/soul/c/'+code+'/');}
+        else{show('没有找到这串码。请核对，或联系成昊重新获取','err');btn.disabled=false;}
+      })
+      .catch(function(){
+        show('网络似乎断了，稍后再试','err');btn.disabled=false;
+      });
+  }
+  btn.addEventListener('click',go);
+  input.addEventListener('keydown',function(e){if(e.key==='Enter')go()});
+})();
+
+  // ===== 星图定制台 =====
+  var openOrderBtn=document.getElementById('openOrder');
+  if(openOrderBtn){openOrderBtn.addEventListener('click',function(ev){ev.preventDefault();gotoOrder()})}
+  function gotoOrder(){
+    var p=document.getElementById('order-panel');
+    if(p)p.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  var ordForm=document.getElementById('ord-form'),
+      ordNo=document.getElementById('ord-no'),
+      payHidden=document.getElementById('ord-pay'),
+      successLayer=document.getElementById('soul-booking-success'),
+      stage1=document.getElementById('soul-pay-stage'),
+      doneBox=document.getElementById('soul-pay-done'),
+      qrW=document.getElementById('ord-qr-wechat'),
+      qrA=document.getElementById('ord-qr-alipay');
+
+  Array.prototype.forEach.call(document.querySelectorAll('.pay-opt'),function(el){
+    el.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.pay-opt'),function(x){x.classList.remove('sel')});
+      el.classList.add('sel');
+      payHidden.value=el.getAttribute('data-v');
+    });
+  });
+
+  function genOrderNo(){
+    var d=new Date(),p=function(n){return (n<10?'0':'')+n};
+    return 'ST'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
+  }
+
+  if(ordForm){
+    ordForm.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var get=function(id){var e=document.getElementById(id);return e?e.value.trim():''};
+      var name=get('ord-name'),wx=get('ord-wechat'),tel=get('ord-phone'),
+          birth=get('ord-birth'),cal=get('ord-calendar'),place=get('ord-place'),pay=payHidden.value||'微信';
+      var err='';
+      if(!name)err='请填写你的称呼';
+      else if(!wx&&!tel)err='微信号与手机号至少留一个，方便我找到你';
+      else if(!birth)err='请填写出生年月日时（不知道具体时间可填中午12点）';
+      else if(!cal)err='请选择历法';
+      else if(!place)err='请填写出生地点';
+      if(err){alert(err);return}
+      ordNo.value=genOrderNo();
+      var fd=new FormData();
+      fd.append('订单编号',ordNo.value);
+      fd.append('产品','本元星图·专属星卡 ¥99');
+      fd.append('姓名',name);
+      fd.append('微信号',wx);
+      fd.append('手机号',tel);
+      fd.append('出生年月日时',birth);
+      fd.append('历法',cal);
+      fd.append('出生地点',place);
+      fd.append('支付方式',pay);
+      fetch('https://formsubmit.co/ajax/17274719131@163.com',{method:'POST',headers:{'Accept':'application/json'},body:fd})
+        .then(function(r){return r.json()})
+        .then(function(){console.log('order ok')})
+        .catch(function(e){console.error('order err',e)});
+      var qrId = pay==='支付宝'?'ord-qr-alipay':'ord-qr-wechat';
+      qrW.style.display = qrId==='ord-qr-wechat'?'block':'none';
+      qrA.style.display = qrId==='ord-qr-alipay'?'block':'none';
+      stage1.style.display='block';doneBox.style.display='none';
+      successLayer.style.display='flex';
+      document.body.style.overflow='hidden';
+    });
+  }
+  var confirmBtn=document.getElementById('ord-pay-confirm');
+  if(confirmBtn){confirmBtn.addEventListener('click',function(){stage1.style.display='none';doneBox.style.display='block'})}
+  function closeOrder(returnForm){
+    successLayer.style.display='none';
+    document.body.style.overflow='';
+    if(returnForm){try{ordForm.reset()}catch(e){}
+      Array.prototype.forEach.call(document.querySelectorAll('.pay-opt'),function(x,i){
+        x.classList.toggle('sel',i===0)});payHidden.value='微信'}
+  }
+  var bkOrder=document.getElementById('ord-back-order');
+  if(bkOrder)bkOrder.addEventListener('click',function(){closeOrder(true)});
+  var bkHome=document.getElementById('ord-back-home');
+  if(bkHome)bkHome.addEventListener('click',function(){closeOrder(false)});
+</script>
+</body>
+</html>
